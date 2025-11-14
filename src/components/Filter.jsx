@@ -1,9 +1,10 @@
 import { useState}  from "react"
 import { genres } from "../data.js";
 
-export default function Filter() {
-    const [genre, setGenre] = useState("");
+export default function Filter({selectedGenre, setSelectedGenre}) {
     const [sort, setSort] = useState("");
+
+   
 
     return(
         <div className="filter">
@@ -11,10 +12,10 @@ export default function Filter() {
 
             <select 
                 name="genres"
-                value={genre}
-                onChange = {(gen) => setGenre(gen.target.value)}
+                value={selectedGenre}
+                onChange = {(gen) => setSelectedGenre(gen.target.value)}
             >
-                <option value={genre.title}>All Genres</option>
+                <option value="">All Genres</option>
                 {genres.map(g => (
                     <option key={g.id} value={g.title}>
                         {g.title}

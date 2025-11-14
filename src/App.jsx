@@ -7,6 +7,8 @@ import Header from "./components/Header";
 import Filter from "./components/Filter";
 import PodcastModal from "./components/PodcastModal";
 import Pagination from "./components/Pagination";
+import { genres } from "./data.js";
+import { getGenreTitle } from "./utils/getGenreTitle.js";
 
 
 export default function App() {
@@ -16,6 +18,9 @@ export default function App() {
     const [selectedPodcast, setSelectedPodcast] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerpage = 6;
+    const [genre , setGenre] = useState("")
+    const [selectedGenre , setSelectedGenre] = useState("")
+    
 
 
     const openModal = (podcast) => {setSelectedPodcast(podcast)};
@@ -74,14 +79,19 @@ const fetchPodcasts = useCallback(async (signal) => {
         );
     }
 
-    const indexOfLastPodcast = currentPage * itemsPerpage;
-    const indexOfFirstPodcast = indexOfLastPodcast - itemsPerpage;
-    const currentPodcast = podcasts.slice(indexOfFirstPodcast, indexOfLastPodcast);
+    const filterPodcast = selectedGenre ? podcasts.filter(podcast => getGenreTitle(podcast.id, genres).includes(selectedGenre)) : podcasts
+    const indexOfLastPodcast = currentPage * itemsPerpage; //multiplies the page number and how many podcast cards there are
+    const indexOfFirstPodcast = indexOfLastPodcast - itemsPerpage;// subtracts the last podcast index and the podcast cards rendered on page (6)
+    const currentPodcast = filterPodcast.slice(indexOfFirstPodcast, indexOfLastPodcast);
 
     return (
         <main className="app-root">
             <Header />
-            <Filter />
+            <Filter 
+                selectedGenre = {selectedGenre}
+                setSelectedGenre = {setSelectedGenre}
+                genres = {genres}
+            />
 
             <section className="podcast-grid">
             {currentPodcast.map((podcast) => (
