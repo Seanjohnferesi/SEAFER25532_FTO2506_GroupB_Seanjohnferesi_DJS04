@@ -82,19 +82,19 @@ const fetchPodcasts = useCallback(async (signal) => {
         <main className="app-root">
             <Header />
             <Filter />
-               
-            <Pagination 
-                totalItems = {podcasts.length}
-                itemsPerpage = {itemsPerpage}
-                currentPage = {currentPage}
-                setCurrentPage = {setCurrentPage}
-            />
 
             <section className="podcast-grid">
             {currentPodcast.map((podcast) => (
                 <PodcastCard key={podcast.id} podcast={podcast} openModal={openModal} />
             ))}
             </section>
+
+            <Pagination 
+                totalItems = {podcasts.length}
+                itemsPerpage = {itemsPerpage}
+                currentPage = {currentPage}
+                setCurrentPage = {setCurrentPage}
+            />
 
              {selectedPodcast && (
             <PodcastModal 
