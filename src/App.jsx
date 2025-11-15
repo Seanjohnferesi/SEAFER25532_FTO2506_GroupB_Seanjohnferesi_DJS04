@@ -18,7 +18,7 @@ export default function App() {
     const [selectedPodcast, setSelectedPodcast] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerpage = 6;
-    const [genre , setGenre] = useState("")
+    const [sort, setSort] = useState("")
     const [selectedGenre , setSelectedGenre] = useState("")
     
 
@@ -78,11 +78,23 @@ const fetchPodcasts = useCallback(async (signal) => {
             </main>
         );
     }
-
     const filterPodcast = selectedGenre ? podcasts.filter(podcast => getGenreTitle(podcast.id, genres).includes(selectedGenre)) : podcasts
+
+    const sortedItems = [...filterPodcast]
+        .filter(pod => 
+        (!selectedGenre || pod.genre === selectedGenre)
+        ).sort((a,b) => {
+        if (sort === "upDown") return a.title.localeCompare(b.title);
+        if (sort === "downUp") return b.title.localeCompare(a.title);
+        if (sort === "newest") return new Date(b.lastUpdate) - new Date(a.lastUpdated)
+        return 0
+    })
+
     const indexOfLastPodcast = currentPage * itemsPerpage; //multiplies the page number and how many podcast cards there are
     const indexOfFirstPodcast = indexOfLastPodcast - itemsPerpage;// subtracts the last podcast index and the podcast cards rendered on page (6)
-    const currentPodcast = filterPodcast.slice(indexOfFirstPodcast, indexOfLastPodcast);
+    const currentPodcast = sortedItems.slice(indexOfFirstPodcast, indexOfLastPodcast);
+
+    
 
     return (
         <main className="app-root">
@@ -91,6 +103,8 @@ const fetchPodcasts = useCallback(async (signal) => {
                 selectedGenre = {selectedGenre}
                 setSelectedGenre = {setSelectedGenre}
                 genres = {genres}
+                sort={sort}
+                setSort={setSort}
             />
 
             <section className="podcast-grid">
