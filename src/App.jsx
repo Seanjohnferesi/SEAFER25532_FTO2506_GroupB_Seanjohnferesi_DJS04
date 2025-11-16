@@ -11,6 +11,7 @@ import { genres } from "./data.js";
 import { getGenreTitle } from "./utils/getGenreTitle.js";
 import { fetchPodcastsAPI } from "./api/fetchPodcast.js";
 import LoadingState from "./components/LoadingState.jsx";
+import { filterPodcasts } from "./utils/filterPodcasts.js";
 
 
 export default function App() {
@@ -62,23 +63,22 @@ const fetchPodcasts = useCallback(async (signal) => {
 
     if(loading) return <LoadingState/>
 
-
-    const filterPodcast = selectedGenre ? podcasts.filter(podcast => getGenreTitle(podcast.id, genres).includes(selectedGenre)) : podcasts
-
-    const sortedItems = [...filterPodcast]
-        .filter(pod => 
-        (!selectedGenre || pod.genre === selectedGenre)
-        ).sort((a,b) => {
+    // GENRE FILTER
+    const filtered = filterPodcasts(podcasts, selectedGenre, genres, getGenreTitle)
+    // SORTING
+    const sortedItems = [...filtered].sort((a,b) => {
         if (sort === "upDown") return a.title.localeCompare(b.title);
         if (sort === "downUp") return b.title.localeCompare(a.title);
         if (sort === "newest") return new Date(b.updated) - new Date(a.updated)
         return 0
     })
 
+    // SEARCH
     const searchFiltered = sortedItems.filter(podcast => 
         podcast.title.toLowerCase().includes(searchInput.toLowerCase())
     );
 
+    // PAGINATION
     const indexOfLastPodcast = currentPage * itemsPerpage; //multiplies the page number and how many podcast cards there are
     const indexOfFirstPodcast = indexOfLastPodcast - itemsPerpage;// subtracts the last podcast index and the podcast cards rendered on page (6)
     const currentPodcast = searchFiltered.slice(indexOfFirstPodcast, indexOfLastPodcast);
