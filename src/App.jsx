@@ -1,35 +1,44 @@
-import { useCallback, useEffect, useState } from "react";
-import PodcastCard from "./components/PodcastCard";
-import "./styles/App.css";
-import "./styles/LoadingState.css"
-import "./styles/styles.css"
-import Header from "./components/Header";
-import Filter from "./components/Filter";
-import PodcastModal from "./components/PodcastModal";
-import Pagination from "./components/Pagination";
+import { useCallback, useEffect} from "react";
+
+// Data / Context
 import { genres } from "./data.js";
-import { getGenreTitle } from "./utils/getGenreTitle.js";
+import { usePodcast } from "./context/PodcastContext.jsx";
+
+// API / Utils
 import { fetchPodcastsAPI } from "./api/fetchPodcast.js";
-import LoadingState from "./components/LoadingState.jsx";
+import { getGenreTitle } from "./utils/getGenreTitle.js";
 import { filterPodcasts } from "./utils/filterPodcasts.js";
 import { sortPodcasts } from "./utils/sortPodcast.js";
 import { searchPodcast } from "./utils/search.js";
 import { paginatePodcasts } from "./utils/pagination.js";
 
+// Components
+import Header from "./components/Header";
+import Filter from "./components/Filter";
+import PodcastCard from "./components/PodcastCard";
+import PodcastModal from "./components/PodcastModal";
+import Pagination from "./components/Pagination";
+import LoadingState from "./components/LoadingState.jsx";
+
+// Styles
+import "./styles/App.css";
+import "./styles/LoadingState.css";
+import "./styles/styles.css";
+
 
 export default function App() {
-    const [podcasts, setPodcasts] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [selectedPodcast, setSelectedPodcast] = useState(null);
-    const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerpage = 6;
-    const [sort, setSort] = useState("");
-    const [selectedGenre , setSelectedGenre] = useState("");
-    const [searchInput, setSearchInput] = useState("");
+    const {
+        podcasts, setPodcasts,
+        loading, setLoading,
+        error, setError,
+        selectedPodcast, setSelectedPodcast,
+        currentPage, setCurrentPage,
+        itemsPerpage,
+        sort, setSort,
+        selectedGenre, setSelectedGenre,
+        searchInput, setSearchInput
+    } = usePodcast()
     
-
-
     const openModal = (podcast) => {setSelectedPodcast(podcast)};
     const closeModal = () => { setSelectedPodcast(null) }
 
