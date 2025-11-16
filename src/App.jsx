@@ -12,6 +12,7 @@ import { getGenreTitle } from "./utils/getGenreTitle.js";
 import { fetchPodcastsAPI } from "./api/fetchPodcast.js";
 import LoadingState from "./components/LoadingState.jsx";
 import { filterPodcasts } from "./utils/filterPodcasts.js";
+import { sortPodcasts } from "./utils/sortPodcast.js";
 
 
 export default function App() {
@@ -66,13 +67,7 @@ const fetchPodcasts = useCallback(async (signal) => {
     // GENRE FILTER
     const filtered = filterPodcasts(podcasts, selectedGenre, genres, getGenreTitle)
     // SORTING
-    const sortedItems = [...filtered].sort((a,b) => {
-        if (sort === "upDown") return a.title.localeCompare(b.title);
-        if (sort === "downUp") return b.title.localeCompare(a.title);
-        if (sort === "newest") return new Date(b.updated) - new Date(a.updated)
-        return 0
-    })
-
+    const sortedItems = sortPodcasts(filtered, sort)
     // SEARCH
     const searchFiltered = sortedItems.filter(podcast => 
         podcast.title.toLowerCase().includes(searchInput.toLowerCase())
