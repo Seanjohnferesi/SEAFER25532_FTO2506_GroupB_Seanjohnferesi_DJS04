@@ -40,6 +40,7 @@ body{
     .filter > select{
         border: none;
         padding: 5px 18px;
+        /* width: 200px; */
         border-radius: 7px;
         background-color: var(--color-btn);
         color: var(--color-text);
