@@ -71,7 +71,7 @@ const fetchPodcasts = useCallback(async (signal) => {
         ).sort((a,b) => {
         if (sort === "upDown") return a.title.localeCompare(b.title);
         if (sort === "downUp") return b.title.localeCompare(a.title);
-        if (sort === "newest") return new Date(b.lastUpdate) - new Date(a.lastUpdated)
+        if (sort === "newest") return new Date(b.updated) - new Date(a.updated)
         return 0
     })
 
