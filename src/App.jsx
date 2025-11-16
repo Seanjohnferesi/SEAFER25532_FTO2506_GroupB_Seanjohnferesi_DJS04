@@ -9,6 +9,7 @@ import PodcastModal from "./components/PodcastModal";
 import Pagination from "./components/Pagination";
 import { genres } from "./data.js";
 import { getGenreTitle } from "./utils/getGenreTitle.js";
+import { fetchPodcastsAPI } from "./api/fetchPodcast.js";
 
 
 export default function App() {
@@ -32,21 +33,15 @@ const fetchPodcasts = useCallback(async (signal) => {
         setError(null);
 
         try {
-            const res = await fetch("https://podcast-api.netlify.app/", { signal }, []);
-            if(!res.ok) throw new Error(`Fetch failed: ${res.status} ${res.statusText}`);
-            const data = await res.json();
+            const data = await fetchPodcastsAPI(signal);
+            setPodcasts(data)
 
-            if(!Array.isArray(data)) {
-                setPodcasts([]);
-                setError("Unexpected response format from API.");
-            } else {
-                setPodcasts(data);
-            }
         } catch (err) {
             // if fetch was aborted or cancelled, do nothing
             if (err.name === "AbortError") return;
             setError(err.message || "Unknown error while fetching podcasts.");
             setPodcasts([]);
+            
         } finally {
             setLoading(false);
         }
