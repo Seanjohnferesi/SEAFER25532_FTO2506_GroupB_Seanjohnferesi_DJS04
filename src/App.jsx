@@ -14,6 +14,7 @@ import LoadingState from "./components/LoadingState.jsx";
 import { filterPodcasts } from "./utils/filterPodcasts.js";
 import { sortPodcasts } from "./utils/sortPodcast.js";
 import { searchPodcast } from "./utils/search.js";
+import { paginatePodcasts } from "./utils/pagination.js";
 
 
 export default function App() {
@@ -67,16 +68,15 @@ const fetchPodcasts = useCallback(async (signal) => {
 
     // GENRE FILTER
     const filtered = filterPodcasts(podcasts, selectedGenre, genres, getGenreTitle)
+    
     // SORTING
     const sortedItems = sortPodcasts(filtered, sort)
+
     // SEARCH
     const searchFiltered = searchPodcast(sortedItems, searchInput)
 
     // PAGINATION
-    const indexOfLastPodcast = currentPage * itemsPerpage; //multiplies the page number and how many podcast cards there are
-    const indexOfFirstPodcast = indexOfLastPodcast - itemsPerpage;// subtracts the last podcast index and the podcast cards rendered on page (6)
-    const currentPodcast = searchFiltered.slice(indexOfFirstPodcast, indexOfLastPodcast);
-
+    const currentPodcast = paginatePodcasts(searchFiltered, currentPage, itemsPerpage)
     
 
     return (
