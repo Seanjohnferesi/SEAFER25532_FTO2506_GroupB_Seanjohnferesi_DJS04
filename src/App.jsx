@@ -10,6 +10,7 @@ import Pagination from "./components/Pagination";
 import { genres } from "./data.js";
 import { getGenreTitle } from "./utils/getGenreTitle.js";
 import { fetchPodcastsAPI } from "./api/fetchPodcast.js";
+import LoadingState from "./components/LoadingState.jsx";
 
 
 export default function App() {
@@ -41,7 +42,7 @@ const fetchPodcasts = useCallback(async (signal) => {
             if (err.name === "AbortError") return;
             setError(err.message || "Unknown error while fetching podcasts.");
             setPodcasts([]);
-            
+
         } finally {
             setLoading(false);
         }
@@ -59,21 +60,7 @@ const fetchPodcasts = useCallback(async (signal) => {
         return () => controller.abort();
     }, [fetchPodcasts]);
 
-    if(loading) {
-        return(
-            <main className="app-root">
-                <header className="app-header">
-                    <h1>Forger Talks</h1>
-                </header>
-                <div className="status">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-            </main>
-        );
-    }
+    if(loading) return <LoadingState/>
 
 
     const filterPodcast = selectedGenre ? podcasts.filter(podcast => getGenreTitle(podcast.id, genres).includes(selectedGenre)) : podcasts
