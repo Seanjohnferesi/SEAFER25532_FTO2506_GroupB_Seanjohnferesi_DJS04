@@ -13,6 +13,7 @@ import { fetchPodcastsAPI } from "./api/fetchPodcast.js";
 import LoadingState from "./components/LoadingState.jsx";
 import { filterPodcasts } from "./utils/filterPodcasts.js";
 import { sortPodcasts } from "./utils/sortPodcast.js";
+import { searchPodcast } from "./utils/search.js";
 
 
 export default function App() {
@@ -69,9 +70,7 @@ const fetchPodcasts = useCallback(async (signal) => {
     // SORTING
     const sortedItems = sortPodcasts(filtered, sort)
     // SEARCH
-    const searchFiltered = sortedItems.filter(podcast => 
-        podcast.title.toLowerCase().includes(searchInput.toLowerCase())
-    );
+    const searchFiltered = searchPodcast(sortedItems, searchInput)
 
     // PAGINATION
     const indexOfLastPodcast = currentPage * itemsPerpage; //multiplies the page number and how many podcast cards there are
